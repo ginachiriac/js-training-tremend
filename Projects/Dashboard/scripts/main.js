@@ -1,3 +1,4 @@
+// create an html element
 function createElement(element, container, attributes, properties) {
     if (container != null) {
         var elementContainer = document.createElement(container);
@@ -19,6 +20,40 @@ function createElement(element, container, attributes, properties) {
     }
 
     return el;
+}
+
+// create collections, tags, parts
+function createParts (item, parts, buttonText) {
+    var partsContainer = document.createElement("li");
+
+    // iterate through parts, show parts name, set parts id
+    var partContainer = document.createElement("ul");
+    for (var j = 0; j < item.length; j++) {
+        for (var k = 0; k < parts.length; k++) {
+            if (item[j] == parts[k].id) {
+                var partName = createElement("li", null, {}, {"textContent": parts[k].name});
+                partName.setAttribute("data-part-id", parts[k].id);
+                partContainer.appendChild(partName);
+            }
+        }
+    }
+    partsContainer.appendChild(partContainer);
+
+    // generate button
+    if (typeof buttonText !== 'undefined') {
+        partsContainer.appendChild(createButton(buttonText));
+    }
+
+    return partsContainer;
+}
+
+// create button for parts
+function createButton(text) {
+    var tagButton = document.createElement("Button");
+    var tagButtonText = document.createTextNode(text);
+    tagButton.appendChild(tagButtonText);
+
+    return tagButton;
 }
 
 var dataContainer = document.querySelector("#data");
@@ -56,11 +91,10 @@ for (var i = 0; i < items.length; i++) {
      * textContent - purrrfect
      */
 
-    idContainer.textContent = item.id;
+ //   idContainer.textContent = item.id;
     nameContainer.textContent = item.name;
     descriptionContainer.textContent = item.details.description;
     var fileTypes = item.filesTypes;
-
 
     //iterate through fileTypes
     for (var j= 0; j< fileTypes.length; j++) {
@@ -86,19 +120,18 @@ for (var i = 0; i < items.length; i++) {
             fileTypeDistributionContainer.appendChild(distributionList);
         }
 
-
         fileTypeContainer.appendChild(fileTypeDistributionContainer);
         fileTypesContainer.appendChild(fileTypeContainer);
     }
 
-
-
-
     //append data to item
-    itemDataContainer.appendChild(idContainer);
+ //   itemDataContainer.appendChild(idContainer);
     itemDataContainer.appendChild(nameContainer);
     itemDataContainer.appendChild(descriptionContainer);
     itemDataContainer.appendChild(fileTypesContainer);
+    itemDataContainer.appendChild(createParts(item.collections, collections, "Add to a new collection"));
+    itemDataContainer.appendChild(createParts(item.tags, tags, "Add a new tag"));
+    itemDataContainer.appendChild(createParts(item.parts, items));
 
 
     var checkboxContainer = document.createElement("li");
@@ -111,6 +144,5 @@ for (var i = 0; i < items.length; i++) {
     itemContainer.appendChild(itemDataContainer);
     itemsContainer.appendChild(itemContainer);
 }
-
 
 dataContainer.appendChild(itemsContainer);
