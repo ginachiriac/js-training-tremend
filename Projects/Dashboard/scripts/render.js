@@ -63,6 +63,38 @@ function renderTags(tags, parentElement, button) {
 
   if (button) {
     var buttonElement = createElement("button", "li", {}, {textContent: "Add another tag"});
+    var button = buttonElement.firstChild;
+    addEventListener(button, 'click', function(){
+      this.remove();
+
+      var inputElement = createElement("input", '', {type: 'text', name: 'Tag'});
+      var submitInput = createElement("input", '', {type: 'submit', value: 'Save'}, {}, {click: function() {
+        for (var i = 0; i < tags.length; i++) {
+          var tag = getTag(tags[i]);
+          var found = false;
+          if (tag.name == inputElement.value) {
+            var tagElement = createElement("li", null, {'data-tag-id': tag.id}, {textContent: tag.name});
+            tagsContainer.appendChild(tagElement);
+            found = true;
+          }
+        }
+        if (!found) {
+          var tagElement = createElement("li", null, {}, {textContent: inputElement.value});
+          tagsContainer.appendChild(tagElement);
+        }
+        else {
+          return buttonElement
+        }
+
+        tagsContainer.appendChild(buttonElement1);
+      }});
+
+      buttonElement.appendChild(inputElement);
+      buttonElement.appendChild(submitInput);
+
+
+    });
+
     tagsContainer.appendChild(buttonElement);
   }
 
