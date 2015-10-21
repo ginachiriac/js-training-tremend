@@ -64,38 +64,54 @@ function renderTags(tags, parentElement, button) {
   if (button) {
     var buttonElement = createElement("button", "li", {}, {textContent: "Add another tag"});
     var button = buttonElement.firstChild;
+    var inputElement = createElement("input", null, {type: 'text', name: 'Tag', style: "display: none"});
+    var submitInput = createElement("input", null, {type: 'submit', value: 'Save', style: "display: none"});
+
+
+    // on button click hide add button and show input
     addEventListener(button, 'click', function(){
-      this.remove();
+      this.style.display = 'none';
+      inputElement.removeAttribute('style');
+      submitInput.removeAttribute('style');
+    });
 
-      var inputElement = createElement("input", '', {type: 'text', name: 'Tag'});
-      var submitInput = createElement("input", '', {type: 'submit', value: 'Save'}, {}, {click: function() {
-        for (var i = 0; i < tags.length; i++) {
-          var tag = getTag(tags[i]);
-          var found = false;
-          if (tag.name == inputElement.value) {
-            var tagElement = createElement("li", null, {'data-tag-id': tag.id}, {textContent: tag.name});
-            tagsContainer.appendChild(tagElement);
-            found = true;
-          }
-        }
-        if (!found) {
-          var tagElement = createElement("li", null, {}, {textContent: inputElement.value});
+    // on "save" click, save tag
+    addEventListener(submitInput, 'click', function() {
+      if(inputElement.value == '') {
+        inputElement.style.borderColor = 'red';
+        return;
+      } else {
+        inputElement.removeAttribute('style');
+      }
+
+      // find tag matching current value; if doesn't exist add new object to tags
+      for (var i = 0; i < getTags().length; i++) {
+        var tag = getTags()[i];
+        var found = false;
+        if (tag.name == inputElement.value) {
+          var tagElement = createElement("li", null, {'data-tag-id': tag.id}, {textContent: tag.name});
           tagsContainer.appendChild(tagElement);
+          found = true;
+          console.log(tag);
         }
-        else {
-          return buttonElement
-        }
+      }
 
-        tagsContainer.appendChild(buttonElement1);
-      }});
+      if (!found) {
+        var tagElement = createElement("li", null, {}, {textContent: inputElement.value});
+        tagsContainer.insertBefore(tagElement, buttonElement);
+        addToTags({id: getTags().length+1, name: inputElement.value})
+        console.log(getTags());
+      }
 
-      buttonElement.appendChild(inputElement);
-      buttonElement.appendChild(submitInput);
-
-
+      button.removeAttribute('style');
+      inputElement.value = '';
+      inputElement.style.display = 'none';
+      submitInput.style.display = 'none';
     });
 
     tagsContainer.appendChild(buttonElement);
+    buttonElement.appendChild(inputElement);
+    buttonElement.appendChild(submitInput);
   }
 
   parentElement.appendChild(tagsContainer);

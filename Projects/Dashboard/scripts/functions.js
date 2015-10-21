@@ -53,6 +53,14 @@ function extractObjectFromArrayByProperty(arr, property, value) {
     return null;
 }
 
+function getTags() {
+    return tags;
+}
+
+function addToTags(obj) {
+    tags.push(obj)
+}
+
 function addEventListener(el, eventName, handler) {
     if (el.addEventListener) {
         el.addEventListener(eventName, handler);
